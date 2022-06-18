@@ -3,7 +3,6 @@ module github.com/amitde69/school-manager/api
 go 1.18
 
 require (
-	github.com/amitde69/school-manager/students/controller/api/v1alpha1 main
 	github.com/gin-gonic/gin v1.8.1
 	k8s.io/api v0.24.2
 	k8s.io/apimachinery v0.24.2
