@@ -18,11 +18,19 @@ package controllers
 
 import (
 	"context"
-
+	// "fmt"
+	// corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/errors"
+	// metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	// "k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
+	// "k8s.io/apimachinery/pkg/types"
+	"reflect"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	// "sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 	"sigs.k8s.io/controller-runtime/pkg/log"
+	"sigs.k8s.io/controller-runtime/pkg/reconcile"
 
 	schoolmanageriov1alpha1 "github.com/amitde69/school-manager/api/v1alpha1"
 )
@@ -47,11 +55,93 @@ type StudentReconciler struct {
 // For more details, check Reconcile and its Result here:
 // - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.12.1/pkg/reconcile
 func (r *StudentReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = log.FromContext(ctx)
+	logger := log.FromContext(ctx)
+	logger.Info("Reconciling Students")
 
-	// TODO(user): your logic here
+	student := &schoolmanageriov1alpha1.Student{}
 
-	return ctrl.Result{}, nil
+	err := r.Get(ctx, req.NamespacedName, student)
+	if err != nil {
+		// if the resource is not found, then just return (might look useless as this usually happens in case of Delete events)
+		if errors.IsNotFound(err) {
+			return ctrl.Result{}, nil
+		}
+		logger.Error(err, "Error occurred while fetching the Student resource")
+		return ctrl.Result{}, err
+	}
+
+	// lbls := labels.Set{
+	// 	"app": "school-manager",
+	// 	"name": student.Name,
+	// }
+	// existingPods := &corev1.PodList{}
+	// err = r.Client.List(ctx, existingPods,
+	// 	&client.ListOptions{
+	// 		Namespace:     student.Namespace,
+	// 		LabelSelector: labels.SelectorFromSet(lbls),
+	// 	})
+	// if err != nil {
+	// 	logger.Error(err, "Error occurred while listing pods under the user resource")
+	// 	return reconcile.Result{}, err
+	// }
+
+	// existingPodNames := []string{}
+
+	// for _, pod := range existingPods.Items {
+	// 	if pod.GetObjectMeta().GetDeletionTimestamp() != nil {
+	// 		continue
+	// 	}
+	// 	if pod.Status.Phase == corev1.PodPending || pod.Status.Phase == corev1.PodRunning {
+	// 		existingPodNames = append(existingPodNames, pod.Name)
+	// 	}
+	// 	logger.Info("Found existing pod: " + pod.Name)
+	// }
+
+	// // if len(existingPodNames) == 0 {
+	// // 	logger.Info("No existing pods found")
+	// // }
+
+	// logger.Info("Assesing number of pods against desired number of pods")
+
+	status := schoolmanageriov1alpha1.StudentStatus{
+		CurrenctClass: "-",
+		Presence:      false,
+	}
+
+	if !reflect.DeepEqual(student.Status, status) {
+		student.Status = status
+		err := r.Client.Status().Update(ctx, student)
+		if err != nil {
+			logger.Error(err, "Error occurred while updating the user resource")
+			return reconcile.Result{}, err
+		}
+	}
+
+	// if int32(len(existingPodNames)) > student.Spec.Size {
+	// 	logger.Info("Deleting a pod in the user", "expected size", student.Spec.Size, "Pod.Name", existingPods.Items[0].Name)
+	// 	pod := existingPods.Items[0]
+	// 	err = r.Client.Delete(ctx, &pod)
+	// 	if err != nil {
+	// 		logger.Error(err, "Error occurred while deleting the pod")
+	// 		return reconcile.Result{}, err
+	// 	}
+	// }
+
+	// if int32(len(existingPodNames)) < student.Spec.Size {
+	// 	logger.Info("Adding a pod in the user", "expected size", student.Spec.Size, "Pod.Names", existingPodNames)
+	// 	pod := newPodForUser(student)
+	// 	if err := controllerutil.SetControllerReference(student, pod, r.Scheme); err != nil {
+	// 		logger.Error(err, "unable to set owner reference on new pod")
+	// 		return reconcile.Result{}, err
+	// 	}
+	// 	err = r.Client.Create(ctx, pod)
+	// 	if err != nil {
+	// 		logger.Error(err, "Error occurred while creating the pod")
+	// 		return reconcile.Result{}, err
+	// 	}
+	// }
+
+	return reconcile.Result{Requeue: true}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.

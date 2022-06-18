@@ -28,14 +28,19 @@ type StudentSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	// Foo is an example field of Student. Edit student_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	FirstName string   `json:"firstname"`
+	LastName  string   `json:"lastname"`
+	Age       int32    `json:"age"`
+	Id        int32    `json:"id"`
+	Classes   []string `json:"classes"`
 }
 
 // StudentStatus defines the observed state of Student
 type StudentStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
+	CurrenctClass string `json:"currentclass"`
+	Presence      bool   `json:"presence"`
 }
 
 //+kubebuilder:object:root=true

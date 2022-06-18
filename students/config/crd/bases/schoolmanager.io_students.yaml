@@ -35,13 +35,40 @@ spec:
           spec:
             description: StudentSpec defines the desired state of Student
             properties:
-              foo:
-                description: Foo is an example field of Student. Edit student_types.go
-                  to remove/update
+              age:
+                format: int32
+                type: integer
+              classes:
+                items:
+                  type: string
+                type: array
+              firstname:
                 type: string
+              id:
+                format: int32
+                type: integer
+              lastname:
+                type: string
+            required:
+            - age
+            - classes
+            - firstname
+            - id
+            - lastname
             type: object
           status:
             description: StudentStatus defines the observed state of Student
+            properties:
+              currentclass:
+                description: 'INSERT ADDITIONAL STATUS FIELD - define observed state
+                  of cluster Important: Run "make" to regenerate code after modifying
+                  this file'
+                type: string
+              presence:
+                type: boolean
+            required:
+            - currentclass
+            - presence
             type: object
         type: object
     served: true
