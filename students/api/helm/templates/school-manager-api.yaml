@@ -41,7 +41,7 @@ spec:
         #   initialDelaySeconds: 15
         #   timeoutSeconds: 3
         #   periodSeconds: 5
-         image: amitde7896/school-manager-api:{{ .Values.tag }}
+         image: amitde7896/{{ template "appname" .}}:{{ .Values.tag }}
         #  imagePullPolicy: Always
          # the values will be taken from the chart values according to the env type that is define in the env values
          resources:

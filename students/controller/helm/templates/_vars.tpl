@@ -1,6 +1,6 @@
 {{/* APP NAME */}}
 {{- define "appname" }}
-{{- printf "students-school-manager-api" -}}
+{{- printf "students-school-manager-controller" -}}
 {{ end }}
 
 {{/* APP NAMESPACE */}}

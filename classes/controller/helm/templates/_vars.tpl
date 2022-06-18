@@ -1,9 +1,9 @@
 {{/* APP NAME */}}
 {{- define "appname" }}
-{{- printf "students-school-manager-api" -}}
+{{- printf "classes-school-manager-controller" -}}
 {{ end }}
 
 {{/* APP NAMESPACE */}}
 {{- define "namespace" }}
-{{- printf "students-system" -}}
+{{- printf "classes-system" -}}
 {{ end }}
