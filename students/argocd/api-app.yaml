@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: students-school-manager-api
+  namespace: argocd
+spec:
+  destination:
+    namespace: students-system
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: students/api/helm
+    repoURL: https://github.com/amitde69/school-manager
+    targetRevision: main

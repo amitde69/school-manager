@@ -116,6 +116,11 @@ func (r *StudentReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 			return reconcile.Result{}, err
 		}
 	}
+	// logger.Info("setting owner reference")
+	// if err := controllerutil.SetControllerReference(student, student, r.Scheme); err != nil {
+	// 	logger.Error(err, "unable to set owner reference on new pod")
+	// 	return reconcile.Result{}, err
+	// }
 
 	// if int32(len(existingPodNames)) > student.Spec.Size {
 	// 	logger.Info("Deleting a pod in the user", "expected size", student.Spec.Size, "Pod.Name", existingPods.Items[0].Name)

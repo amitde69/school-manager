@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "appname" .}}
+  namespace: {{ template "namespace" .}}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "appname" .}}
+  revisionHistoryLimit: 2
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ template "appname" .}}
+        pod_type: ms
+    spec:
+      terminationGracePeriodSeconds: 65
+      securityContext:
+        runAsUser: 1200
+        runAsGroup: 1200
+        fsGroup: 1200
+      serviceAccountName: {{ template "appname" .}}-sa
+      containers:
+       - name: {{ template "appname" .}}
+         securityContext:
+           privileged: false
+           allowPrivilegeEscalation: false
+           readOnlyRootFilesystem: true
+        #  livenessProbe:
+        #   httpGet:
+        #     path: /api_v3/service/system/action/health
+        #     port: 8080
+        #   initialDelaySeconds: 15
+        #   timeoutSeconds: 3
+        #   periodSeconds: 5
+        #  readinessProbe:
+        #   httpGet:
+        #     path: /api_v3/service/system/action/health
+        #     port: 8080
+        #   initialDelaySeconds: 15
+        #   timeoutSeconds: 3
+        #   periodSeconds: 5
+         image: amitde7896/school-manager-api:{{ .Values.tag }}
+        #  imagePullPolicy: Always
+         # the values will be taken from the chart values according to the env type that is define in the env values
+         resources:
+          requests:
+            cpu: 100m
+            memory: 200M
+          limits:
+            cpu: 100m
+            memory: 200M
+        #  env:
+        #     - name: TCM_URL
+        #       value: {{ .Values.tcm_url | quote }}
+         ports:
+           - name: http
+             containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "appname" .}}
+  namespace: {{ template "namespace" . }}
+  annotations:
+    # alb.ingress.kubernetes.io/healthcheck-port: traffic-port
+    # alb.ingress.kubernetes.io/healthcheck-path: "/api_v3/service/system/action/health"
+    # alb.ingress.kubernetes.io/healthcheck-interval-seconds: "10"
+    # alb.ingress.kubernetes.io/healthcheck-timeout-seconds: "5"
+    # alb.ingress.kubernetes.io/success-codes: "200"
+    # alb.ingress.kubernetes.io/target-group-attributes: deregistration_delay.timeout_seconds=60
+  labels:
+    app: {{ template "appname" .}}
+spec:
+  type: NodePort
+  ports: 
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  selector:
+      app: {{ template "appname" .}}
+
