@@ -11,14 +11,16 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	schoolmanageriov1alpha1 "github.com/amitde69/school-manager/classes/controller/api/v1alpha1"
+	classesapi "github.com/amitde69/school-manager/classes/controller/api/v1alpha1"
+	studentsapi "github.com/amitde69/school-manager/students/controller/api/v1alpha1"
     "github.com/gin-gonic/gin"
 )
 
 func main() {
 	scheme := runtime.NewScheme()
 	_ = clientgoscheme.AddToScheme(scheme)
-	_ = schoolmanageriov1alpha1.AddToScheme(scheme)
+	_ = classesapi.AddToScheme(scheme)
+	_ = studentsapi.AddToScheme(scheme)
 	kubeconfig := ctrl.GetConfigOrDie()
 	clientset, err := client.New(kubeconfig, client.Options{ Scheme: scheme })
 	if err != nil {

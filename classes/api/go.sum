@@ -63,6 +63,8 @@ github.com/amitde69/school-manager/classes/api v0.0.0-20220618193429-b75f6ae7e26
 github.com/amitde69/school-manager/classes/api v0.0.0-20220618193429-b75f6ae7e263/go.mod h1:X8TsbLjk3HjDG4Ahecb1EQ+j7l8EB4MwW1ZVIqX9ZMI=
 github.com/amitde69/school-manager/classes/controller v0.0.0-20220618193429-b75f6ae7e263 h1:m1/TM6JTSHwCjJnRnzMADgSJAg56nAiCNRdEdXNWu9w=
 github.com/amitde69/school-manager/classes/controller v0.0.0-20220618193429-b75f6ae7e263/go.mod h1:/ub22pNmBLG+YvXsqSR95ZSWbej5QDGqBwDIXzikfV0=
+github.com/amitde69/school-manager/students/controller v0.0.0-20220618195230-b8c27eb55e90 h1:X8qKo25+TzZdgMPW0jjQsinEAEQGuUzSu63WNiMKrQk=
+github.com/amitde69/school-manager/students/controller v0.0.0-20220618195230-b8c27eb55e90/go.mod h1:PGDNU07jl8BZRbeFBY1Hhnv3RZQbPWyIaPvv08uni4g=
 github.com/antihax/optional v1.0.0/go.mod h1:uupD/76wgC+ih3iEmQUL+0Ugr19nfwCT1kdvxnR2qWY=
 github.com/antlr/antlr4/runtime/Go/antlr v0.0.0-20210826220005-b48c857c3a0e/go.mod h1:F7bn7fEU90QkQ3tnmaTx3LTKLEDqnwWODIYppRQ5hnY=
 github.com/armon/circbuf v0.0.0-20150827004946-bbbad097214e/go.mod h1:3U/XgcO3hCbHZ8TKRvWD2dDTCfh9M9ya+I9JpbB7O8o=
