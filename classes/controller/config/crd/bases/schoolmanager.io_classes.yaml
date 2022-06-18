@@ -17,21 +17,17 @@ spec:
   versions:
   - additionalPrinterColumns:
     - description: The name of this class
-      jsonPath: .spec.firstname
-      name: FirstName
+      jsonPath: .spec.name
+      name: Name
       type: string
-    - description: The last name of this class
-      jsonPath: .spec.lastname
-      name: LastName
+    - description: The teacher of this class
+      jsonPath: .spec.teacher
+      name: Teacher
       type: string
-    - description: The age of this class
-      jsonPath: .spec.age
-      name: Age
-      type: integer
-    - description: The id of this class
-      jsonPath: .spec.id
-      name: Id
-      type: integer
+    - description: The availability of this class
+      jsonPath: .status.available
+      name: Availability
+      type: bool
     name: v1alpha1
     schema:
       openAPIV3Schema:

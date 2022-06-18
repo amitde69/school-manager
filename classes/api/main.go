@@ -35,6 +35,8 @@ func main() {
     router.GET("/classes", handlers.ListClasses(clientset, namespace))
     router.GET("/classes/:name", handlers.GetClass(clientset, namespace))
     router.POST("/classes", handlers.CreateClass(clientset, namespace))
+    router.POST("/classes/student", handlers.AddStudent(clientset, namespace))
+    router.POST("/classes/teacher", handlers.ChangeTeacher(clientset, namespace))
     router.DELETE("/classes/:name", handlers.DeleteClass(clientset, namespace))
 
     router.Run(":8080")

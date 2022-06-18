@@ -43,10 +43,10 @@ type ClassStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
-// +kubebuilder:printcolumn:name="FirstName",type="string",JSONPath=".spec.firstname",description="The name of this class"
-// +kubebuilder:printcolumn:name="LastName",type="string",JSONPath=".spec.lastname",description="The last name of this class"
-// +kubebuilder:printcolumn:name="Age",type="integer",JSONPath=".spec.age",description="The age of this class"
-// +kubebuilder:printcolumn:name="Id",type="integer",JSONPath=".spec.id",description="The id of this class"
+// +kubebuilder:printcolumn:name="Name",type="string",JSONPath=".spec.name",description="The name of this class"
+// +kubebuilder:printcolumn:name="Teacher",type="string",JSONPath=".spec.teacher",description="The teacher of this class"
+// +kubebuilder:printcolumn:name="Availability",type="bool",JSONPath=".status.available",description="The availability of this class"
+
 
 // Class is the Schema for the classes API
 type Class struct {

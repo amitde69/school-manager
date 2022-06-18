@@ -77,24 +77,57 @@ func AddStudent(clientset client.Client, namespace string, student string, class
 		fmt.Printf("class not found")
 		return ClassRes{}, err
 	}
+	if classExists.Items[0].Status.Available == false {
+		fmt.Printf("class is not available")
+		return ClassRes{}, err
+	}	
 	studentExists := &studentsapi.StudentList{}
 	err = clientset.List(context.Background(), studentExists, client.InNamespace(namespace), 
 		client.MatchingLabels(labels.Set{"app": "student-controller", "name": student}))
 	if len(studentExists.Items) == 0 {
 		fmt.Printf("student not found")
 		return ClassRes{}, err
-	}	
+	}
 	newClass := &classesapi.Class{}
-	newClass.Spec.Name = classExists.Items[0].Spec.Name
-	newClass.Spec.Teacher = classExists.Items[0].Spec.Teacher
-	newClass.Spec.Students = classExists.Items[0].Spec.Students
+	newClass = &classExists.Items[0]
+	// newClass := &classesapi.Class{}
+	// newClass.Spec.Name = classExists.Items[0].Spec.Name
+	// newClass.Spec.Teacher = classExists.Items[0].Spec.Teacher
+	// newClass.Spec.Students = classExists.Items[0].Spec.Students
 	newClass.Spec.Students = append(newClass.Spec.Students, student)
-	newClass.ResourceVersion = classExists.Items[0].ResourceVersion
+	// newClass.ResourceVersion = classExists.Items[0].ResourceVersion
 	err = clientset.Update(context.Background(), newClass)
 	if err != nil {
 		return ClassRes{}, err
 	}
-	return ClassRes{}, err
+	classres := ClassRes{}
+	classres.Name = newClass.Spec.Name
+	classres.Teacher = newClass.Spec.Teacher
+	classres.Students = newClass.Spec.Students  
+	return classres, err
+}
+
+// create class resource using classesapi
+func ChangeTeacher(clientset client.Client, namespace string, teacher string, class string) (ClassRes, error) {
+	classExists := &classesapi.ClassList{}
+	err := clientset.List(context.Background(), classExists, client.InNamespace(namespace), 
+		client.MatchingLabels(labels.Set{"app": "class-controller", "name": class}))
+	if len(classExists.Items) == 0 {
+		fmt.Printf("class not found")
+		return ClassRes{}, err
+	}	
+	newClass := &classesapi.Class{}
+	newClass = &classExists.Items[0]
+	newClass.Spec.Teacher = teacher
+	err = clientset.Update(context.Background(), newClass)
+	if err != nil {
+		return ClassRes{}, err
+	}
+	classres := ClassRes{}
+	classres.Name = newClass.Spec.Name
+	classres.Teacher = newClass.Spec.Teacher
+	classres.Students = newClass.Spec.Students  
+	return classres, err
 }
 
 
@@ -119,5 +152,9 @@ func AddStudent(clientset client.Client, namespace string, student string, class
 
 type StudentAdd struct {
 	StudentName string `json:"studentname"`
+	ClassName string `json:"classname"`
+}
+type TeacherChange struct {
+	TeacherName string `json:"teachername"`
 	ClassName string `json:"classname"`
 }
