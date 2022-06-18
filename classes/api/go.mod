@@ -1,11 +1,11 @@
-module github.com/amitde69/school-manager/classes/api
+module amitde69/school-manager
 
 go 1.18
 
 require (
-	github.com/amitde69/school-manager/classes/api v0.0.0-20220618142325-dd6a3f58df92
+	github.com/amitde69/school-manager/classes/api v0.0.0-20220618193429-b75f6ae7e263
+	github.com/amitde69/school-manager/classes/controller v0.0.0-20220618193429-b75f6ae7e263
 	github.com/gin-gonic/gin v1.8.1
-	k8s.io/api v0.24.2
 	k8s.io/apimachinery v0.24.2
 	k8s.io/client-go v0.24.2
 	sigs.k8s.io/controller-runtime v0.12.1
@@ -67,6 +67,7 @@ require (
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
+	k8s.io/api v0.24.2 // indirect
 	k8s.io/apiextensions-apiserver v0.24.0 // indirect
 	k8s.io/component-base v0.24.0 // indirect
 	k8s.io/klog/v2 v2.60.1 // indirect

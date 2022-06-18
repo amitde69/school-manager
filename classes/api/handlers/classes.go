@@ -24,7 +24,7 @@ func GetClass(clientset client.Client, namespace string) gin.HandlerFunc {
 		if err != nil {
 			panic(err.Error())
 		}
-		if class.FirstName == "" {
+		if class.Name == "" {
 			c.JSON(http.StatusNotFound, gin.H{"error": "Class not found"})
 		} else {
 			c.IndentedJSON(http.StatusOK, class)

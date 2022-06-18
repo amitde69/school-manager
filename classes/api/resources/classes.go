@@ -20,11 +20,9 @@ func ListClasses(clientset client.Client, namespace string) ([]ClassRes, error) 
 	}
 	classesRes := make([]ClassRes, len(list.Items))
 	for i, class := range list.Items {
-		classesRes[i].FirstName = class.Spec.FirstName
-		classesRes[i].LastName = class.Spec.LastName
-		classesRes[i].Age = class.Spec.Age
-		classesRes[i].Id = class.Spec.Id
-		classesRes[i].Classes = class.Spec.Classes
+		classesRes[i].Name = class.Spec.Name
+		classesRes[i].Teacher = class.Spec.Teacher
+		classesRes[i].Students = class.Spec.Students
 	}
 	// for _, class := range classes.Items {
 	// 	fmt.Printf("name: %s\nage: %s\n", class.Spec.Name, class.Spec.Age)
@@ -45,11 +43,9 @@ func GetClass(clientset client.Client, namespace string, className string) (Clas
 	if len(classExists.Items) == 0 {
 		return classRes, err
 	}
-	classRes.FirstName = classExists.Items[0].Spec.FirstName
-	classRes.LastName = classExists.Items[0].Spec.LastName
-	classRes.Age = classExists.Items[0].Spec.Age
-	classRes.Id = classExists.Items[0].Spec.Id
-	classRes.Classes = classExists.Items[0].Spec.Classes
+	classRes.Name = classExists.Items[0].Spec.Name
+	classRes.Teacher = classExists.Items[0].Spec.Teacher
+	classRes.Students = classExists.Items[0].Spec.Students
 	return classRes, err
 }
 
@@ -75,7 +71,7 @@ func CreateClass(clientset client.Client, namespace string, newClass ClassRes) (
 	class := newClassCR(namespace, &newClass)
 	classExists := &schoolmanageriov1alpha1.ClassList{}
 	err := clientset.List(context.Background(), classExists, client.InNamespace(namespace), 
-		client.MatchingLabels(labels.Set{"app": "class-controller", "name": newClass.FirstName}))
+		client.MatchingLabels(labels.Set{"app": "class-controller", "name": newClass.Name}))
 	if len(classExists.Items) == 0 {
 		err = clientset.Create(context.Background(), class)
 	} else {
@@ -92,28 +88,24 @@ func CreateClass(clientset client.Client, namespace string, newClass ClassRes) (
 func newClassCR(namespace string, class *ClassRes) *schoolmanageriov1alpha1.Class {
 	labels := map[string]string{
 		"app": "class-controller",
-		"name": class.FirstName,
+		"name": class.Name,
 	}
 	return &schoolmanageriov1alpha1.Class{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: class.FirstName,
+			Name: class.Name,
 			Namespace:    namespace,
 			Labels:       labels,
 		},
 		Spec: schoolmanageriov1alpha1.ClassSpec{
-			FirstName: class.FirstName,
-			LastName: class.LastName,
-			Age: class.Age,
-			Id: class.Id,
-			Classes: class.Classes,
+			Name: class.Name,
+			Teacher: class.Teacher,
+			Students: class.Students,
 		},
 	}
 }
 
 type ClassRes struct {
-	FirstName string `json:"firstname"`
-	LastName string `json:"lastname"`
-	Age  int32 `json:"age"`
-	Id int32 `json:"id"`
-	Classes []string `json:"classes"`
+	Name string `json:"name"`
+	Teacher string `json:"teacher"`
+	Students []string `json:"students"`
 }
