@@ -2,12 +2,13 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
+  creationTimestamp: null
   name: {{ template "appname" .}}-role
 rules:
 - apiGroups:
   - schoolmanager.io
   resources:
-  - students
+  - classes
   verbs:
   - create
   - delete
@@ -19,14 +20,46 @@ rules:
 - apiGroups:
   - schoolmanager.io
   resources:
-  - students/finalizers
+  - classes/finalizers
   verbs:
   - update
 - apiGroups:
   - schoolmanager.io
   resources:
-  - students/status
+  - classes/status
   verbs:
   - get
   - patch
   - update
+
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - coordination.k8s.io
+  resources:
+  - leases
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+  - patch
