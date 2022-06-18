@@ -27,7 +27,7 @@ spec:
     - description: The availability of this class
       jsonPath: .status.available
       name: Availability
-      type: bool
+      type: boolean
     name: v1alpha1
     schema:
       openAPIV3Schema:
