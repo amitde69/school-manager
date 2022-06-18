@@ -20,9 +20,11 @@ func ListStudents(clientset client.Client, namespace string) ([]StudentRes, erro
 	}
 	studentsRes := make([]StudentRes, len(list.Items))
 	for i, student := range list.Items {
-		studentsRes[i].Name = student.Spec.Name
+		studentsRes[i].FirstName = student.Spec.FirstName
+		studentsRes[i].LastName = student.Spec.LastName
 		studentsRes[i].Age = student.Spec.Age
-		studentsRes[i].Size = student.Spec.Size
+		studentsRes[i].Id = student.Spec.Id
+		studentsRes[i].Classes = student.Spec.Classes
 	}
 	// for _, student := range students.Items {
 	// 	fmt.Printf("name: %s\nage: %s\n", student.Spec.Name, student.Spec.Age)
@@ -43,9 +45,11 @@ func GetStudent(clientset client.Client, namespace string, studentName string) (
 	if len(studentExists.Items) == 0 {
 		return studentRes, err
 	}
-	studentRes.Name = studentExists.Items[0].Spec.Name
+	studentRes.FirstName = studentExists.Items[0].Spec.FirstName
+	studentRes.LastName = studentExists.Items[0].Spec.LastName
 	studentRes.Age = studentExists.Items[0].Spec.Age
-	studentRes.Size = studentExists.Items[0].Spec.Size
+	studentRes.Id = studentExists.Items[0].Spec.Id
+	studentRes.Classes = studentExists.Items[0].Spec.Classes
 	return studentRes, err
 }
 
@@ -71,7 +75,7 @@ func CreateStudent(clientset client.Client, namespace string, newStudent Student
 	student := newStudentCR(namespace, &newStudent)
 	studentExists := &schoolmanageriov1alpha1.StudentList{}
 	err := clientset.List(context.Background(), studentExists, client.InNamespace(namespace), 
-		client.MatchingLabels(labels.Set{"app": "student-controller", "name": newStudent.Name}))
+		client.MatchingLabels(labels.Set{"app": "student-controller", "name": newStudent.FirstName}))
 	if len(studentExists.Items) == 0 {
 		err = clientset.Create(context.Background(), student)
 	} else {
@@ -88,24 +92,28 @@ func CreateStudent(clientset client.Client, namespace string, newStudent Student
 func newStudentCR(namespace string, student *StudentRes) *schoolmanageriov1alpha1.Student {
 	labels := map[string]string{
 		"app": "student-controller",
-		"name": student.Name,
+		"name": student.FirstName,
 	}
 	return &schoolmanageriov1alpha1.Student{
 		ObjectMeta: metav1.ObjectMeta{
-			Name: student.Name,
+			Name: student.FirstName,
 			Namespace:    namespace,
 			Labels:       labels,
 		},
 		Spec: schoolmanageriov1alpha1.StudentSpec{
-			Name: student.Name,
+			FirstName: student.FirstName,
+			LastName: student.LastName,
 			Age: student.Age,
-			Size: student.Size,
+			Id: student.Id,
+			Classes: student.Classes,
 		},
 	}
 }
 
 type StudentRes struct {
-	Name string `json:"name"`
-	Age  string `json:"age"`
-	Size int32 `json:"size"`
+	FirstName string `json:"firstname"`
+	LastName string `json:"lastname"`
+	Age  int32 `json:"age"`
+	Id int32 `json:"id"`
+	Classes []string `json:"classes"`
 }

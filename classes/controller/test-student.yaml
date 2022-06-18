@@ -1,0 +1,10 @@
+apiVersion: schoolmanager.io/v1alpha1
+kind: Class
+metadata:
+  name: john
+spec:
+  firstname: "John"
+  lastname: "Doe"
+  id: 123456789
+  age: 20
+  classes: []

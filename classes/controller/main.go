@@ -31,8 +31,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/healthz"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	schoolmanageriov1alpha1 "github.com/amitde69/school-manager/students/controller/api/v1alpha1"
-	"github.com/amitde69/school-manager/students/controller/controllers"
+	schoolmanageriov1alpha1 "github.com/amitde69/school-manager/classes/controller/api/v1alpha1"
+	"github.com/amitde69/school-manager/classes/controller/controllers"
 	//+kubebuilder:scaffold:imports
 )
 
@@ -89,11 +89,11 @@ func main() {
 		os.Exit(1)
 	}
 
-	if err = (&controllers.StudentReconciler{
+	if err = (&controllers.ClassReconciler{
 		Client: mgr.GetClient(),
 		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
-		setupLog.Error(err, "unable to create controller", "controller", "Student")
+		setupLog.Error(err, "unable to create controller", "controller", "Class")
 		os.Exit(1)
 	}
 	//+kubebuilder:scaffold:builder

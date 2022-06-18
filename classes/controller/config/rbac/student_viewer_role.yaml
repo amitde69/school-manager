@@ -1,0 +1,20 @@
+# permissions for end users to view classes.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: class-viewer-role
+rules:
+- apiGroups:
+  - schoolmanager.io
+  resources:
+  - classes
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - schoolmanager.io
+  resources:
+  - classes/status
+  verbs:
+  - get

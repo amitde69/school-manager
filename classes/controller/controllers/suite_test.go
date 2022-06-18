@@ -30,7 +30,7 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	schoolmanageriov1alpha1 "github.com/amitde69/school-manager/students/controller/api/v1alpha1"
+	schoolmanageriov1alpha1 "github.com/amitde69/school-manager/classes/controller/api/v1alpha1"
 	//+kubebuilder:scaffold:imports
 )
 

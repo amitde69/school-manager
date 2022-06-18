@@ -1,0 +1,6 @@
+apiVersion: schoolmanager.io/v1alpha1
+kind: Class
+metadata:
+  name: class-sample
+spec:
+  # TODO(user): Add fields here

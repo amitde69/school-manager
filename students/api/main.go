@@ -7,7 +7,7 @@ import (
 	// metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 	// "k8s.io/client-go/kubernetes"
-	"github.com/amitde69/school-manager/api/handlers"
+	"github.com/amitde69/school-manager/students/api/handlers"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -30,10 +30,10 @@ func main() {
 	}
 
     router := gin.Default()
-    router.GET("/students", handlers.ListUsers(clientset, namespace))
-    router.GET("/students/:name", handlers.GetUser(clientset, namespace))
-    router.POST("/students", handlers.CreateUser(clientset, namespace))
-    router.DELETE("/students/:name", handlers.DeleteUser(clientset, namespace))
+    router.GET("/students", handlers.ListStudents(clientset, namespace))
+    router.GET("/students/:name", handlers.GetStudent(clientset, namespace))
+    router.POST("/students", handlers.CreateStudent(clientset, namespace))
+    router.DELETE("/students/:name", handlers.DeleteStudent(clientset, namespace))
 
     router.Run(":8080")
 }

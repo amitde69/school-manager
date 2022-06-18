@@ -5,37 +5,37 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.9.0
   creationTimestamp: null
-  name: students.schoolmanager.io
+  name: classes.schoolmanager.io
 spec:
   group: schoolmanager.io
   names:
-    kind: Student
-    listKind: StudentList
-    plural: students
-    singular: student
+    kind: Class
+    listKind: ClassList
+    plural: classes
+    singular: class
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
-    - description: The name of this student
+    - description: The name of this class
       jsonPath: .spec.firstname
       name: FirstName
       type: string
-    - description: The last name of this student
+    - description: The last name of this class
       jsonPath: .spec.lastname
       name: LastName
       type: string
-    - description: The age of this student
+    - description: The age of this class
       jsonPath: .spec.age
       name: Age
       type: integer
-    - description: The id of this student
+    - description: The id of this class
       jsonPath: .spec.id
       name: Id
       type: integer
     name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: Student is the Schema for the students API
+        description: Class is the Schema for the classes API
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -50,7 +50,7 @@ spec:
           metadata:
             type: object
           spec:
-            description: StudentSpec defines the desired state of Student
+            description: ClassSpec defines the desired state of Class
             properties:
               age:
                 format: int32
@@ -74,7 +74,7 @@ spec:
             - lastname
             type: object
           status:
-            description: StudentStatus defines the observed state of Student
+            description: ClassStatus defines the observed state of Class
             properties:
               currentclass:
                 description: 'INSERT ADDITIONAL STATUS FIELD - define observed state

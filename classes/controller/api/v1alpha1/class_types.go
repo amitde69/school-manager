@@ -23,8 +23,8 @@ import (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
-// StudentSpec defines the desired state of Student
-type StudentSpec struct {
+// ClassSpec defines the desired state of Class
+type ClassSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
@@ -35,8 +35,8 @@ type StudentSpec struct {
 	Classes   []string `json:"classes"`
 }
 
-// StudentStatus defines the observed state of Student
-type StudentStatus struct {
+// ClassStatus defines the observed state of Class
+type ClassStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 	CurrenctClass string `json:"currentclass"`
@@ -45,29 +45,29 @@ type StudentStatus struct {
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
-// +kubebuilder:printcolumn:name="FirstName",type="string",JSONPath=".spec.firstname",description="The name of this student"
-// +kubebuilder:printcolumn:name="LastName",type="string",JSONPath=".spec.lastname",description="The last name of this student"
-// +kubebuilder:printcolumn:name="Age",type="integer",JSONPath=".spec.age",description="The age of this student"
-// +kubebuilder:printcolumn:name="Id",type="integer",JSONPath=".spec.id",description="The id of this student"
+// +kubebuilder:printcolumn:name="FirstName",type="string",JSONPath=".spec.firstname",description="The name of this class"
+// +kubebuilder:printcolumn:name="LastName",type="string",JSONPath=".spec.lastname",description="The last name of this class"
+// +kubebuilder:printcolumn:name="Age",type="integer",JSONPath=".spec.age",description="The age of this class"
+// +kubebuilder:printcolumn:name="Id",type="integer",JSONPath=".spec.id",description="The id of this class"
 
-// Student is the Schema for the students API
-type Student struct {
+// Class is the Schema for the classes API
+type Class struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   StudentSpec   `json:"spec,omitempty"`
-	Status StudentStatus `json:"status,omitempty"`
+	Spec   ClassSpec   `json:"spec,omitempty"`
+	Status ClassStatus `json:"status,omitempty"`
 }
 
 //+kubebuilder:object:root=true
 
-// StudentList contains a list of Student
-type StudentList struct {
+// ClassList contains a list of Class
+type ClassList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []Student `json:"items"`
+	Items           []Class `json:"items"`
 }
 
 func init() {
-	SchemeBuilder.Register(&Student{}, &StudentList{})
+	SchemeBuilder.Register(&Class{}, &ClassList{})
 }
