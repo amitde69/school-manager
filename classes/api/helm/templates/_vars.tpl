@@ -5,5 +5,5 @@
 
 {{/* APP NAMESPACE */}}
 {{- define "namespace" }}
-{{- printf "students-system" -}}
+{{- printf "classes-system" -}}
 {{ end }}
