@@ -104,8 +104,8 @@ func (r *ClassReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl
 	// logger.Info("Assesing number of pods against desired number of pods")
 
 	status := schoolmanageriov1alpha1.ClassStatus{
-		CurrenctClass: "-",
-		Presence:      false,
+		Available:       true,
+		PresentStudents: []string{},
 	}
 
 	if !reflect.DeepEqual(class.Status, status) {

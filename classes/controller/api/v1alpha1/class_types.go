@@ -28,19 +28,17 @@ type ClassSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	FirstName string   `json:"firstname"`
-	LastName  string   `json:"lastname"`
-	Age       int32    `json:"age"`
-	Id        int32    `json:"id"`
-	Classes   []string `json:"classes"`
+	Name     string   `json:"name"`
+	Teacher  string   `json:"teacher"`
+	Students []string `json:"students"`
 }
 
 // ClassStatus defines the observed state of Class
 type ClassStatus struct {
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
-	CurrenctClass string `json:"currentclass"`
-	Presence      bool   `json:"presence"`
+	Available       bool     `json:"available"`
+	PresentStudents []string `json:"presentstudents"`
 }
 
 //+kubebuilder:object:root=true
