@@ -1,0 +1,166 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: {{ template "appname" .}}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "appname" .}}
+  revisionHistoryLimit: 2
+  template:
+    metadata:
+      labels:
+        app: {{ template "appname" .}}
+        pod_type: ms
+    spec:
+      terminationGracePeriodSeconds: 65
+      securityContext:
+        runAsUser: 1200
+        runAsGroup: 1200
+        fsGroup: 1200
+      serviceAccountName: students-school-manager-api
+      containers:
+       - name: {{ template "appname" .}}
+         securityContext:
+           privileged: false
+           allowPrivilegeEscalation: false
+           readOnlyRootFilesystem: true
+        #  livenessProbe:
+        #   httpGet:
+        #     path: /api_v3/service/system/action/health
+        #     port: 8080
+        #   initialDelaySeconds: 15
+        #   timeoutSeconds: 3
+        #   periodSeconds: 5
+        #  readinessProbe:
+        #   httpGet:
+        #     path: /api_v3/service/system/action/health
+        #     port: 8080
+        #   initialDelaySeconds: 15
+        #   timeoutSeconds: 3
+        #   periodSeconds: 5
+         image: amitde7896/school-manager-api:{{ .Values.image }}
+         lifecycle:
+          preStop:
+            exec:
+              command: 
+                - "/bin/sh" 
+                - "-c" 
+                - "sleep 30 && rm -rf /var/log/ms-playback-api-rest/$(hostname)*.log.*"
+         imagePullPolicy: Always
+         # the values will be taken from the chart values according to the env type that is define in the env values
+         resources:
+         {{- $myenv := .Values.global.type }}
+         {{- range $key, $val := .Values.env_type }}
+         {{- if eq $key $myenv }}
+          requests:
+            cpu: {{ $val.requests.cpu }}
+            memory: {{ $val.requests.memory }}
+          limits:
+            cpu: {{ $val.limits.cpu }}
+            memory: {{ $val.limits.memory }}
+         {{- end }}
+         {{- end }}
+
+         env:
+            - name: TCM_URL
+              value: {{ .Values.tcm_url | quote }}
+            - name: TCM_APP
+              value: {{ .Values.tcm_app | quote }}
+            - name: TCM_SECTION
+              value: {{ .Values.tcm_section | quote }}
+            - name: TCM_HOST
+              value: MS
+            - name: MICROSERVICES_CLIENT_CONFIGURATION__PHOENIX__ADDRESS
+              value: "ms-phoenix-api-grpc.{{ .Values.cluster_name }}.internal:443"
+            - name: MICROSERVICES_CLIENT_CONFIGURATION__PHOENIX__CERT_FILE_PATH
+              value: "./ssl/ssl.crt"
+            - name: MICROSERVICES_CLIENT_CONFIGURATION__HOUSEHOLD__ADDRESS
+              value: "ms-phoenix-api-grpc.{{ .Values.cluster_name }}.internal:443"
+            - name: MICROSERVICES_CLIENT_CONFIGURATION__HOUSEHOLD__CERT_FILE_PATH
+              value: "./ssl/ssl.crt"
+            - name: TCM_APP_ID
+              value: '5bf8cf60'
+            - name: TCM_APP_SECRET
+              value: '5aaa99331c18f6bad4adeef93ab770c2'
+            - name: API_STD_OUT_LOG_LEVEL
+              value: Debug
+            - name: API_LOG_DIR
+              value: '/var/log/{{ template "appname" .}}'
+            - name: CONCURRENCY_LIMITER_MAX_CONCURRENT
+              value: '100'
+            {{ if eq .Values.cluster_name "sgp2" }}
+            - name: MIN_WORKER_THREADS
+              value: '500'
+            - name: MIN_IO_WORKER_THREADS
+              value: '500'
+            {{ end }}
+            - name: PORT
+              value: '8080'
+            - name: COMPlus_EnableDiagnostics
+              value: '0'
+            - name: ENABLE_REQUEST_RESPONSE_LOGGING
+              value: {{ .Values.s3_requestresponse | quote }}
+            - name: Logging__LogLevel__Microsoft.AspNetCore.Hosting.Diagnostics
+              value: None
+            {{ if eq .Values.tcm_from_local "true" }}    
+            - name: TCM_FROM_LOCAL
+              value: 'true'
+            {{ end }}
+            {{- $myenv := .Values.global.type }}
+            {{- range $key, $val := .Values.env_type }}
+            {{- if eq $key $myenv }}
+            - name: LAYERED_CACHE_IN_MEMORY_LIMIT_MB	
+              value: {{ $val.memory | quote }}	
+            - name: GENERAL_IN_MEMORY_CACHE_LIMIT_MB	
+              value: {{ $val.memory | quote }}
+            {{- end }}
+            {{- end }}
+         volumeMounts:
+          - name: {{ template "appname" .}}-log4net-conf
+            mountPath: /opt/{{ template "appname" .}}/log4net.config
+            subPath: log4net.config 
+          {{ if eq .Values.tcm_from_local "true" }}
+          - name: tcm-config
+            mountPath: /opt/{{ template "appname" .}}/config.yaml
+            subPath: config.yaml
+          {{ end }}
+          - name: int-ssl-conf
+            mountPath: /opt/{{ template "appname" .}}/ssl/ssl.crt
+            subPath: ssl.crt
+          - name: int-ssl-conf
+            mountPath: /opt/{{ template "appname" .}}/ssl/ssl.key
+            subPath: ssl.key
+          - name: logz
+            mountPath: /var/log/{{ template "appname" .}}
+          - name: files-dir
+            mountPath: /opt/{{ template "appname" .}}/files
+          - name: tmp-dir
+            mountPath: /tmp  
+         ports:
+           - name: http
+             containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "appname" .}}
+  annotations:
+    alb.ingress.kubernetes.io/healthcheck-port: traffic-port
+    alb.ingress.kubernetes.io/healthcheck-path: "/api_v3/service/system/action/health"
+    alb.ingress.kubernetes.io/healthcheck-interval-seconds: "10"
+    alb.ingress.kubernetes.io/healthcheck-timeout-seconds: "5"
+    alb.ingress.kubernetes.io/success-codes: "200"
+    alb.ingress.kubernetes.io/target-group-attributes: deregistration_delay.timeout_seconds=60
+  labels:
+    app: {{ template "appname" .}}
+spec:
+  type: NodePort
+  ports: 
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+    name: http
+  selector:
+      app: {{ template "appname" .}}
+
