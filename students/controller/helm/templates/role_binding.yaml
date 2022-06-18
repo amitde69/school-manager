@@ -5,8 +5,8 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: manager-role
+  name: {{ template "appname" .}}-role
 subjects:
 - kind: ServiceAccount
-  name: students-school-manager-controller
+  name: {{ template "appname" .}}
   namespace: students-system
