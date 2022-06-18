@@ -1,0 +1,24 @@
+# permissions for end users to edit classes.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: class-editor-role
+rules:
+- apiGroups:
+  - schoolmanager.io
+  resources:
+  - classes
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - schoolmanager.io
+  resources:
+  - classes/status
+  verbs:
+  - get
