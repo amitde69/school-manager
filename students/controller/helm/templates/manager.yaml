@@ -38,7 +38,7 @@ spec:
         - /manager
         args:
         - --leader-elect
-        image: controller:latest
+        image: amitde7896/school-manager-controller:{{ .Values.tag }}
         name: manager
         securityContext:
           allowPrivilegeEscalation: false
