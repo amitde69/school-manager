@@ -8,6 +8,13 @@ rules:
 - apiGroups:
   - schoolmanager.io
   resources:
+  - students
+  verbs:
+  - list
+
+- apiGroups:
+  - schoolmanager.io
+  resources:
   - classes
   verbs:
   - create
