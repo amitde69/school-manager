@@ -45,7 +45,7 @@ type ClassStatus struct {
 //+kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Name",type="string",JSONPath=".spec.name",description="The name of this class"
 // +kubebuilder:printcolumn:name="Teacher",type="string",JSONPath=".spec.teacher",description="The teacher of this class"
-// +kubebuilder:printcolumn:name="Availability",type="bool",JSONPath=".status.available",description="The availability of this class"
+// +kubebuilder:printcolumn:name="Availability",type="boolean",JSONPath=".status.available",description="The availability of this class"
 
 
 // Class is the Schema for the classes API
