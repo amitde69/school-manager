@@ -16,10 +16,6 @@ spec:
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
-    - description: The name of this class
-      jsonPath: .spec.name
-      name: Name
-      type: string
     - description: The teacher of this class
       jsonPath: .spec.teacher
       name: Teacher
