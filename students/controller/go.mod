@@ -1,4 +1,4 @@
-module github.com/amitde69/school-manager
+module github.com/amitde69/school-manager/students/controller
 
 go 1.18
 
