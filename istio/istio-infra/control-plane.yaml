@@ -6,3 +6,5 @@ metadata:
 spec:
   hub: docker.io/querycapistio
   profile: default
+  meshConfig:
+    accessLogFile: /dev/stdout
