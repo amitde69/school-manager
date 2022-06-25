@@ -10,7 +10,7 @@ spec:
   http:
   - match:
     - uri:
-        regex: /classes
+        exact: /classes
     - uri:
         regex: /classes/.*
     route:
@@ -20,7 +20,7 @@ spec:
           number: 80
   - match:
     - uri:
-        regex: /students
+        exact: /students
     - uri:
         regex: /students/.*
     route:
