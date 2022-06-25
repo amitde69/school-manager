@@ -12,8 +12,8 @@ spec:
   - match:
     - uri:
         exact: /classes
-    - uri:
-        regex: /classes/.*
+    # - uri:
+    #     regex: /classes/.*
     route:
     - destination:
         host: classes-school-manager-api.classes-system
@@ -22,8 +22,8 @@ spec:
   - match:
     - uri:
         exact: /students
-    - uri:
-        regex: /students/.*
+    # - uri:
+    #     regex: /students/.*
     route:
     - destination:
         host: students-school-manager-api.students-system
