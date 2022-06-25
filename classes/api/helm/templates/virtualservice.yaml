@@ -2,7 +2,7 @@ apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
   name: classes-api-vs
-  namespace: classes-system
+  namespace: istio-system
 spec:
   hosts:
   - "*"
