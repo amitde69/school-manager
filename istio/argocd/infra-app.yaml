@@ -9,6 +9,6 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: istio/istio-operator
+    path: istio/istio-infra
     repoURL: https://github.com/amitde69/school-manager
     targetRevision: main
