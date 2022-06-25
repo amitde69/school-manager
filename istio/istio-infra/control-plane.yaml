@@ -4,4 +4,5 @@ metadata:
   namespace: istio-system
   name: istio-operator
 spec:
+  hub: docker.io/querycapistio
   profile: default
