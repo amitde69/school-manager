@@ -18,20 +18,22 @@ package controllers
 
 import (
 	"context"
-	// "fmt"
+	"fmt"
 	// corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/api/errors"
 	// metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	// "k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
 	// "k8s.io/apimachinery/pkg/types"
+	"k8s.io/apimachinery/pkg/labels"
 	"reflect"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	// "sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/reconcile"
-
+	classesapi "github.com/amitde69/school-manager/classes/controller/api/v1alpha1"
+	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 	schoolmanageriov1alpha1 "github.com/amitde69/school-manager/students/controller/api/v1alpha1"
 )
 
@@ -40,6 +42,10 @@ type StudentReconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
 }
+
+var (
+	finalizers []string = []string{"finalizers.students.school.amitdebachar.com"}
+)
 
 //+kubebuilder:rbac:groups=schoolmanager.io,resources=students,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=schoolmanager.io,resources=students/status,verbs=get;update;patch
@@ -146,7 +152,51 @@ func (r *StudentReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ct
 	// 	}
 	// }
 
-	return reconcile.Result{Requeue: true}, nil
+
+	logger.Info("Detected a new resource, creating a finalizer for it")
+	if student.GetDeletionTimestamp().IsZero() {
+		// set the finalizers of the user to the rightful ones
+		student.SetFinalizers(finalizers)
+		if err := r.Update(ctx, student); err != nil {
+			logger.Error(err, "error occurred while setting the finalizers of the student resource")
+			return ctrl.Result{}, err
+		}
+	}
+
+	if !student.GetDeletionTimestamp().IsZero() {
+		logger.Info("Deletion detected! Proceeding to cleanup...")
+		logger.Info("Removeing student from all classes *****************")
+		lbls := labels.Set{
+			"app": "class-controller",
+		}
+		allClasses := &classesapi.ClassList{}
+		err = r.Client.List(ctx, allClasses,
+			&client.ListOptions{
+				LabelSelector: labels.SelectorFromSet(lbls),
+			})
+		if err != nil {
+			logger.Error(err, "Error occurred while listing classes")
+			return reconcile.Result{}, err
+		}
+		for _, class := range allClasses.Items {
+			for i, studentList := range class.Spec.Students {
+				if (studentList == student.Name){
+					fmt.Printf("removing student %s from class %s\n", studentList, class.Name)
+					class.Spec.Students = RemoveIndex(class.Spec.Students, i)
+					// handle logic to call classses-api and remove the student from the class
+					break
+				}
+			}
+		}
+		if err := r.cleanupFinalizerCallback(ctx, student); err != nil {
+			logger.Error(err, "error occurred while dealing with the cleanup finalizer")
+			return ctrl.Result{}, err
+		}
+		logger.Info("cleaned up the 'finalizers.user.school.amitdebachar.com' finalizer successfully")
+		return ctrl.Result{}, err
+	}
+	return ctrl.Result{}, err
+	// return reconcile.Result{Requeue: true}, nil
 }
 
 // SetupWithManager sets up the controller with the Manager.
@@ -154,4 +204,22 @@ func (r *StudentReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&schoolmanageriov1alpha1.Student{}).
 		Complete(r)
+}
+
+func RemoveIndex(s []string, index int) []string {
+    return append(s[:index], s[index+1:]...)
+}
+
+func (r *StudentReconciler) cleanupFinalizerCallback(ctx context.Context, student *schoolmanageriov1alpha1.Student) error {
+	// parse the table and the id of the row to delete
+
+	// remove the cleanup-row finalizer from the postgresWriterObject
+	// for _, finalizer := range finalizers {
+	// 	controllerutil.RemoveFinalizer(student, finalizer)	
+	// }
+	controllerutil.RemoveFinalizer(student, "finalizers.students.school.amitdebachar.com")	
+	if err := r.Update(ctx, student); err != nil {
+		return fmt.Errorf("error occurred while removing the finalizer: %w", err)
+	}
+	return nil
 }

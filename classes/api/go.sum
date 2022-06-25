@@ -63,6 +63,8 @@ github.com/amitde69/school-manager/classes/api v0.0.0-20220618193429-b75f6ae7e26
 github.com/amitde69/school-manager/classes/api v0.0.0-20220618193429-b75f6ae7e263/go.mod h1:X8TsbLjk3HjDG4Ahecb1EQ+j7l8EB4MwW1ZVIqX9ZMI=
 github.com/amitde69/school-manager/classes/controller v0.0.0-20220618193429-b75f6ae7e263 h1:m1/TM6JTSHwCjJnRnzMADgSJAg56nAiCNRdEdXNWu9w=
 github.com/amitde69/school-manager/classes/controller v0.0.0-20220618193429-b75f6ae7e263/go.mod h1:/ub22pNmBLG+YvXsqSR95ZSWbej5QDGqBwDIXzikfV0=
+github.com/amitde69/school-manager/classes/controller v0.0.0-20220625210842-3b48145a7d4b h1:oqgKFO5d5leqnm51GbLGa4encITx5qH7FbwPtW8o8EM=
+github.com/amitde69/school-manager/classes/controller v0.0.0-20220625210842-3b48145a7d4b/go.mod h1:/ub22pNmBLG+YvXsqSR95ZSWbej5QDGqBwDIXzikfV0=
 github.com/amitde69/school-manager/students/controller v0.0.0-20220618195230-b8c27eb55e90 h1:X8qKo25+TzZdgMPW0jjQsinEAEQGuUzSu63WNiMKrQk=
 github.com/amitde69/school-manager/students/controller v0.0.0-20220618195230-b8c27eb55e90/go.mod h1:PGDNU07jl8BZRbeFBY1Hhnv3RZQbPWyIaPvv08uni4g=
 github.com/antihax/optional v1.0.0/go.mod h1:uupD/76wgC+ih3iEmQUL+0Ugr19nfwCT1kdvxnR2qWY=

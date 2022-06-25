@@ -7,6 +7,7 @@ import (
 	// metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	// "k8s.io/client-go/kubernetes"
 	"errors"
+	"reflect"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	classesapi "github.com/amitde69/school-manager/classes/controller/api/v1alpha1"
 	studentsapi "github.com/amitde69/school-manager/students/controller/api/v1alpha1"
@@ -69,17 +70,17 @@ import (
 // 	return *class, err
 // }
 
-// create class resource using classesapi
+
 func AddStudent(clientset client.Client, namespace string, student string, class string) (ClassRes, error) {
 	classExists := &classesapi.ClassList{}
 	err := clientset.List(context.Background(), classExists, client.InNamespace(namespace), 
 		client.MatchingLabels(labels.Set{"app": "class-controller", "name": class}))
 	if len(classExists.Items) == 0 {
-		fmt.Printf("class not found")
+		err = errors.New("class not found")
 		return ClassRes{}, err
 	}
 	if classExists.Items[0].Status.Available == false {
-		fmt.Printf("class is not available")
+		err = errors.New("class is not available")
 		return ClassRes{}, err
 	}	
 	studentExists := &studentsapi.StudentList{}
@@ -98,6 +99,45 @@ func AddStudent(clientset client.Client, namespace string, student string, class
 	// newClass.Spec.Students = classExists.Items[0].Spec.Students
 	newClass.Spec.Students = append(newClass.Spec.Students, student)
 	// newClass.ResourceVersion = classExists.Items[0].ResourceVersion
+	err = clientset.Update(context.Background(), newClass)
+	if err != nil {
+		return ClassRes{}, err
+	}
+	classres := ClassRes{}
+	classres.Name = newClass.Spec.Name
+	classres.Teacher = newClass.Spec.Teacher
+	classres.Students = newClass.Spec.Students  
+	return classres, err
+}
+
+func RemoveStudent(clientset client.Client, namespace string, student string, class string) (ClassRes, error) {
+	classExists := &classesapi.ClassList{}
+	err := clientset.List(context.Background(), classExists, client.InNamespace(namespace), 
+		client.MatchingLabels(labels.Set{"app": "class-controller", "name": class}))
+	if len(classExists.Items) == 0 {
+		err = errors.New("class not found")
+		return ClassRes{}, err
+	}
+	if classExists.Items[0].Status.Available == false {
+		err = errors.New("class is not available")
+		return ClassRes{}, err
+	}	
+	studentExists := &studentsapi.StudentList{}
+	err = clientset.List(context.Background(), studentExists, client.InNamespace(namespace), 
+		client.MatchingLabels(labels.Set{"app": "student-controller", "name": student}))
+	if len(studentExists.Items) == 0 {
+		fmt.Printf("student not found")
+		err = errors.New("student not found")
+		return ClassRes{}, err
+	}
+	newClass := &classesapi.Class{}
+	newClass = &classExists.Items[0]
+	for i, liststudent := range newClass.Spec.Students { 
+		if reflect.DeepEqual(liststudent, student) {
+			newClass.Spec.Students = RemoveIndex(newClass.Spec.Students, i)
+			break
+		}
+	}
 	err = clientset.Update(context.Background(), newClass)
 	if err != nil {
 		return ClassRes{}, err
@@ -159,4 +199,9 @@ type StudentAdd struct {
 type TeacherChange struct {
 	TeacherName string `json:"teachername"`
 	ClassName string `json:"classname"`
+}
+
+
+func RemoveIndex(s []string, index int) []string {
+    return append(s[:index], s[index+1:]...)
 }

@@ -38,9 +38,23 @@ func AddStudent(clientset client.Client, namespace string) gin.HandlerFunc {
         c.BindJSON(&newStudent)
 		class, err := resources.AddStudent(clientset, namespace, newStudent.StudentName, newStudent.ClassName)
 		if err != nil {
-			panic(err.Error())
+			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		} else {
+			c.IndentedJSON(http.StatusOK, class)
 		}
-		c.IndentedJSON(http.StatusOK, class)
+	}
+}
+
+func RemoveStudent(clientset client.Client, namespace string) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		newStudent := resources.StudentAdd{}
+        c.BindJSON(&newStudent)
+		class, err := resources.RemoveStudent(clientset, namespace, newStudent.StudentName, newStudent.ClassName)
+		if err != nil {
+			c.JSON(http.StatusNotFound, gin.H{"error": err.Error()})
+		} else {
+			c.IndentedJSON(http.StatusOK, class)
+		}
 	}
 }
 
