@@ -1,0 +1,21 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: students-api-vs
+  namespace: students-system
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - main-gateway
+  http:
+  - match:
+    - uri:
+        exact: /students
+    - uri:
+        regex: /students/.*
+    route:
+    - destination:
+        host: students-school-manager-api.students-system.svc.cluster.local
+        port:
+          number: 80
