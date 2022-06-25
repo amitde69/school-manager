@@ -3,6 +3,7 @@ kind: Namespace
 metadata:
   labels:
     control-plane: {{ template "appname" .}}
+    istio-injection: enabled
   name: classes-system
 ---
 apiVersion: apps/v1

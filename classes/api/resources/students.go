@@ -6,6 +6,7 @@ import (
 	// v1 "k8s.io/api/apps/v1"
 	// metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	// "k8s.io/client-go/kubernetes"
+	"errors"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	classesapi "github.com/amitde69/school-manager/classes/controller/api/v1alpha1"
 	studentsapi "github.com/amitde69/school-manager/students/controller/api/v1alpha1"
@@ -86,6 +87,7 @@ func AddStudent(clientset client.Client, namespace string, student string, class
 		client.MatchingLabels(labels.Set{"app": "student-controller", "name": student}))
 	if len(studentExists.Items) == 0 {
 		fmt.Printf("student not found")
+		err = errors.New("student not found")
 		return ClassRes{}, err
 	}
 	newClass := &classesapi.Class{}

@@ -2,27 +2,28 @@ apiVersion: v1
 kind: Namespace
 metadata:
   labels:
-    control-plane: students-school-manager-controller
+    control-plane: {{ template "appname" .}}
+    istio-injection: enabled
   name: students-system
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: students-school-manager-controller
+  name: {{ template "appname" .}}
   namespace: students-system
   labels:
-    control-plane: students-school-manager-controller
+    control-plane: {{ template "appname" .}}
 spec:
   selector:
     matchLabels:
-      control-plane: students-school-manager-controller
+      control-plane: {{ template "appname" .}}
   replicas: 1
   template:
     metadata:
       annotations:
         kubectl.kubernetes.io/default-container: manager
       labels:
-        control-plane: students-school-manager-controller
+        control-plane: {{ template "appname" .}}
     spec:
       securityContext:
         runAsNonRoot: true
