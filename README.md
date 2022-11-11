@@ -1,5 +1,5 @@
 # school-manager
-school-manager is a collection of Kubernetes based services to manage a school database system.
+school-manager is a collection of Kubernetes based services and operators to manage a school database system using solely Kubernetes objects without a database.
 
 ## Running Locally
 ```
