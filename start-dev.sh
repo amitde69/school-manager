@@ -18,9 +18,9 @@ argocd account update-password --current-password $argopass --new-password Aa123
 
 ## Deploy Istio infra
 argocd app create  -f istio/argocd/operator-app.yaml 
+argocd app wait istio-operator
 ## wait for CRDs to be created before using them
 argocd app create  -f istio/argocd/infra-app.yaml
-argocd app wait istio-infra
 
 ## Deploy students domain
 argocd app create  -f students/argocd/api-app.yaml

@@ -3,8 +3,8 @@ kind: Gateway
 metadata:
   name: main-gateway
   namespace: istio-system
-  annotations:
-    argocd.argoproj.io/sync-wave: "3"
+  # annotations:
+  #   argocd.argoproj.io/sync-wave: "3"
 spec:
   selector:
     istio: ingressgateway
