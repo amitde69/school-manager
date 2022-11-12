@@ -12,14 +12,15 @@ while [[ $? != 0 ]]; do
 done
 argopass=$(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d)
 kubectl port-forward svc/argocd-server 9090:80 -n argocd &
+sleep 10
 argocd login localhost:9090  --username admin --password $argopass --insecure
 argocd account update-password --current-password $argopass --new-password Aa123456
 
 ## Deploy Istio infra
 argocd app create  -f istio/argocd/operator-app.yaml 
 ## wait for CRDs to be created before using them
-sleep 10
 argocd app create  -f istio/argocd/infra-app.yaml
+argocd app wait istio-infra
 
 ## Deploy students domain
 argocd app create  -f students/argocd/api-app.yaml
