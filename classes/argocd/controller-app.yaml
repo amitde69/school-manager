@@ -4,6 +4,9 @@ metadata:
   name: classes-school-manager-controller
   namespace: argocd
 spec:
+  syncPolicy:
+    automated:
+      prune: true
   destination:
     namespace: classes-system
     server: https://kubernetes.default.svc

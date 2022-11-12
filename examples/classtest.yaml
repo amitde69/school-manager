@@ -1,0 +1,8 @@
+apiVersion: schoolmanager.io/v1alpha1
+kind: Class
+metadata:
+  name: class-sample
+spec:
+  name: "test"
+  teacher: "test"
+  students: []

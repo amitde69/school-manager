@@ -4,6 +4,9 @@ metadata:
   name: istio-infra
   namespace: argocd
 spec:
+  syncPolicy:
+    automated:
+      prune: true
   destination:
     namespace: istio-system
     server: https://kubernetes.default.svc
