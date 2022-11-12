@@ -23,11 +23,11 @@ argocd app wait istio-operator
 argocd app create  -f istio/argocd/infra-app.yaml
 
 ## Deploy students domain
-argocd app create  -f students/argocd/api-app.yaml
 argocd app create  -f students/argocd/controller-app.yaml
+argocd app create  -f students/argocd/api-app.yaml
 ## Deploy classes domain
-argocd app create  -f classes/argocd/api-app.yaml
 argocd app create  -f classes/argocd/controller-app.yaml
+argocd app create  -f classes/argocd/api-app.yaml
 
 ## expose istio-ingressgateway on port 8080
 kubectl port-forward svc/istio-ingressgateway 8080:80 -n istio-system &
